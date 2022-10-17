@@ -1,0 +1,9 @@
+*.substvars
+*debhelper*
+.debhelper
+autoreconf.*
+files
+libarchive-dev
+libarchive-tools
+libarchive13
+tmp
