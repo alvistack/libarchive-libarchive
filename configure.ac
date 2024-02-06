@@ -13,7 +13,7 @@ m4_define([BSDCPIO_VERSION_S],LIBARCHIVE_VERSION_S())
 m4_define([BSDCAT_VERSION_S],LIBARCHIVE_VERSION_S())
 m4_define([BSDUNZIP_VERSION_S],LIBARCHIVE_VERSION_S())
 
-AC_PREREQ([2.71])
+AC_PREREQ([2.69])
 
 #
 # Now starts the "real" configure script.
@@ -453,13 +453,17 @@ if test "x$with_iconv" != "xno"; then
   AC_CHECK_HEADERS([iconv.h],[],[],[#include <stdlib.h>])
   if test "x$am_cv_func_iconv" = "xyes"; then
     AC_CHECK_HEADERS([localcharset.h])
-    am_save_LIBS="$LIBS"
     LIBS="${LIBS} ${LIBICONV}"
     if test -n "$LIBICONV"; then
-      LIBSREQUIRED="$LIBSREQUIRED${LIBSREQUIRED:+ }iconv"
+      AC_DEFINE([HAVE_LIBICONV], [1], [Define to 1 if you have the `iconv' library (-liconv).])
+
+      # Most platforms do not provide iconv.pc, but MSYS2 MinGW does.
+      # We add it to our Requires.private only if it exists.
+      PKG_CHECK_MODULES(ICONV_PC, [iconv], [
+        LIBSREQUIRED="$LIBSREQUIRED${LIBSREQUIRED:+ }iconv"
+      ], [true])
     fi
     AC_CHECK_FUNCS([locale_charset])
-    LIBS="${am_save_LIBS}"
     if test "x$ac_cv_func_locale_charset" != "xyes"; then
       # If locale_charset() is not in libiconv, we have to find libcharset.
       AC_CHECK_LIB(charset,locale_charset)
