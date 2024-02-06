@@ -1,0 +1,4 @@
+libarchive source: file-without-copyright-information
+libarchive source: no-debian-changes
+libarchive source: not-binnmuable-any-depends-any
+libarchive source: weak-library-dev-dependency
